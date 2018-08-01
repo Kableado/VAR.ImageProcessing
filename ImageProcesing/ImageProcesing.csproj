@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Code\FindDeltaPosition.cs" />
+    <Compile Include="Code\RawImage.cs" />
     <Compile Include="Controls\CtrFileTextBox.cs">
       <SubType>Component</SubType>
     </Compile>

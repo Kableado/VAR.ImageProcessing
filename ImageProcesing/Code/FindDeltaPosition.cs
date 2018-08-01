@@ -1,86 +1,50 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace ImageProcesing.Code
 {
     public class FindDeltaPosition
     {
-        private const int BytesPerPixel = 3;
-
         private readonly Image _imgStart;
-        private readonly int _widthStart;
-        private readonly int _heightStart;
-        private readonly byte[] _bytesStart;
+        private readonly RawImage _rimgStart;
 
         private readonly Image _imgEnd;
-        private readonly int _widthEnd;
-        private readonly int _heightEnd;
-        private readonly byte[] _bytesEnd;
+        private readonly RawImage _rimgEnd;
 
         public FindDeltaPosition(Image imgStart, Image imgEnd)
         {
             _imgStart = imgStart;
-            _widthStart = _imgStart.Width;
-            _heightStart = _imgStart.Height;
-            _bytesStart = Image_GetPixelsBytesArray(_imgStart);
-
+            _rimgStart = RawImage.FromImage(imgStart);
             _imgEnd = imgEnd;
-            _widthEnd = _imgEnd.Width;
-            _heightEnd = _imgEnd.Height;
-            _bytesEnd = Image_GetPixelsBytesArray(_imgEnd);
-        }
-
-        private static byte[] Bitmap_GetPixelsBytesArray(Bitmap bmp)
-        {
-            Rectangle _imageRect = new Rectangle(0, 0, bmp.Width, bmp.Height);
-            byte[] pixelData = new byte[bmp.Width * bmp.Height * BytesPerPixel];
-
-            BitmapData imageData = bmp.LockBits(
-                _imageRect,
-                ImageLockMode.ReadOnly,
-                PixelFormat.Format24bppRgb);
-            Marshal.Copy(imageData.Scan0, pixelData, 0, pixelData.Length);
-            bmp.UnlockBits(imageData);
-
-            return pixelData;
-        }
-
-        private static byte[] Image_GetPixelsBytesArray(Image img)
-        {
-            Bitmap bmp = new Bitmap(img);
-            return Bitmap_GetPixelsBytesArray(bmp);
+            _rimgEnd = RawImage.FromImage(imgEnd);
         }
 
         public double CalculateMeanSquareError(int offsetX = 0, int offsetY = 0, int skipPixels = 1)
         {
             long sum = 0;
-            int estimatedCount = ((_widthStart - offsetX) * (_heightStart - offsetY)) * 3;
-            for (int y = 0; y < _heightStart; y++)
+            int cnt = 0;
+            for (int y = 0; y < _rimgStart.Height; y += skipPixels)
             {
-                for (int x = 0; x < _widthStart; x++)
+                for (int x = 0; x < _rimgStart.Width; x += skipPixels)
                 {
-                    if ((x % skipPixels != 0) || (y % skipPixels != 0)) { continue; }
-
                     int x2 = x - offsetX;
-                    if (x2 < 0 || x2 >= _widthEnd) { continue; }
                     int y2 = y - offsetY;
-                    if (y2 < 0 || y2 >= _heightEnd) { continue; }
+                    if (_rimgEnd.IsInsideBounds(x2, y2) == false) { continue; }
 
-                    long offset1 = (x + (y * _widthStart)) * BytesPerPixel;
-                    long offset2 = (x2 + (y2 * _widthEnd)) * BytesPerPixel;
+                    long offset1 = _rimgStart.GetOffset(x, y);
+                    long offset2 = _rimgEnd.GetOffset(x2, y2);
 
-                    for (int c = 0; c < BytesPerPixel; c++)
+                    for (int c = 0; c < RawImage.BytesPerPixel; c++)
                     {
-                        int diff = _bytesStart[offset1 + c] - _bytesEnd[offset2 + c];
+                        int diff = _rimgStart.Data[offset1 + c] - _rimgEnd.Data[offset2 + c];
                         sum += (diff * diff);
+                        cnt++;
                     }
                 }
             }
-            double meanSquareRoot = (sum / (double)estimatedCount);
+            double meanSquareRoot = (sum / (double)cnt);
             return meanSquareRoot;
         }
 
@@ -94,9 +58,9 @@ namespace ImageProcesing.Code
         public OffsetPosition SearchOnSpiral(float percentage = 1.0f, int skipPixels = 1)
         {
             int skip = 0;
-            int halfWidth = _widthStart / 2;
-            int halfHeight = _heightStart / 2;
-            int max = (int)(Math.Max(_widthStart, _heightStart) * percentage);
+            int halfWidth = _rimgStart.Width / 2;
+            int halfHeight = _rimgStart.Width / 2;
+            int max = (int)(Math.Max(_rimgStart.Width, _rimgStart.Height) * percentage);
             max *= max;
             int x = 0;
             int y = 0;
