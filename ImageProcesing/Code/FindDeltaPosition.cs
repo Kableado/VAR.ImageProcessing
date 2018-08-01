@@ -9,33 +9,40 @@ namespace ImageProcesing.Code
 {
     public class FindDeltaPosition
     {
+        private const int BytesPerPixel = 3;
+
         private readonly Image _imgStart;
-        private readonly Image _imgEnd;
-        private readonly int _width;
-        private readonly int _height;
+        private readonly int _widthStart;
+        private readonly int _heightStart;
         private readonly byte[] _bytesStart;
+
+        private readonly Image _imgEnd;
+        private readonly int _widthEnd;
+        private readonly int _heightEnd;
         private readonly byte[] _bytesEnd;
 
         public FindDeltaPosition(Image imgStart, Image imgEnd)
         {
             _imgStart = imgStart;
-            _imgEnd = imgEnd;
-            _width = _imgStart.Width;
-            _height = _imgStart.Height;
+            _widthStart = _imgStart.Width;
+            _heightStart = _imgStart.Height;
             _bytesStart = Image_GetPixelsBytesArray(_imgStart);
+
+            _imgEnd = imgEnd;
+            _widthEnd = _imgEnd.Width;
+            _heightEnd = _imgEnd.Height;
             _bytesEnd = Image_GetPixelsBytesArray(_imgEnd);
         }
 
         private static byte[] Bitmap_GetPixelsBytesArray(Bitmap bmp)
         {
             Rectangle _imageRect = new Rectangle(0, 0, bmp.Width, bmp.Height);
-            int channels = Bitmap.GetPixelFormatSize(bmp.PixelFormat) / 8;
-            byte[] pixelData = new byte[bmp.Width * bmp.Height * channels];
+            byte[] pixelData = new byte[bmp.Width * bmp.Height * BytesPerPixel];
 
             BitmapData imageData = bmp.LockBits(
                 _imageRect,
                 ImageLockMode.ReadOnly,
-                bmp.PixelFormat);
+                PixelFormat.Format24bppRgb);
             Marshal.Copy(imageData.Scan0, pixelData, 0, pixelData.Length);
             bmp.UnlockBits(imageData);
 
@@ -48,30 +55,33 @@ namespace ImageProcesing.Code
             return Bitmap_GetPixelsBytesArray(bmp);
         }
 
-        public double CalculateMeanSquareError(int offsetX = 0, int offsetY = 0)
+        public double CalculateMeanSquareError(int offsetX = 0, int offsetY = 0, int skipPixels = 1)
         {
-            long meanSquareRoot = 0;
-            int estimatedCount = ((_width - offsetX) * (_height - offsetY)) * 3;
-            for (int y = 0; y < _height; y++)
+            long sum = 0;
+            int estimatedCount = ((_widthStart - offsetX) * (_heightStart - offsetY)) * 3;
+            for (int y = 0; y < _heightStart; y++)
             {
-                for (int x = 0; x < _width; x++)
+                for (int x = 0; x < _widthStart; x++)
                 {
-                    int x2 = x + offsetX;
-                    if (x2 < 0 || x2 >= _width) { continue; }
-                    int y2 = y + offsetY;
-                    if (y2 < 0 || y2 >= _height) { continue; }
+                    if ((x % skipPixels != 0) || (y % skipPixels != 0)) { continue; }
 
-                    long offset1 = (x + (y * _width)) * 4;
-                    long offset2 = ((x + offsetX) + ((y + offsetY) * _width)) * 4;
+                    int x2 = x - offsetX;
+                    if (x2 < 0 || x2 >= _widthEnd) { continue; }
+                    int y2 = y - offsetY;
+                    if (y2 < 0 || y2 >= _heightEnd) { continue; }
 
-                    for (int c = 0; c < 3; c++)
+                    long offset1 = (x + (y * _widthStart)) * BytesPerPixel;
+                    long offset2 = (x2 + (y2 * _widthEnd)) * BytesPerPixel;
+
+                    for (int c = 0; c < BytesPerPixel; c++)
                     {
                         int diff = _bytesStart[offset1 + c] - _bytesEnd[offset2 + c];
-                        meanSquareRoot += (diff * diff);
+                        sum += (diff * diff);
                     }
                 }
             }
-            return (meanSquareRoot / (double)estimatedCount);
+            double meanSquareRoot = (sum / (double)estimatedCount);
+            return meanSquareRoot;
         }
 
         public class OffsetPosition
@@ -81,11 +91,12 @@ namespace ImageProcesing.Code
             public double MeanSquareError { get; set; }
         }
 
-        public OffsetPosition SearchOnSpiral(float percentage = 1.0f, int skip = 0, int offset = 0)
+        public OffsetPosition SearchOnSpiral(float percentage = 1.0f, int skipPixels = 1)
         {
-            int halfWidth = _width / 2;
-            int halfHeight = _height / 2;
-            int max = (int)(Math.Max(_width, _height) * percentage);
+            int skip = 0;
+            int halfWidth = _widthStart / 2;
+            int halfHeight = _heightStart / 2;
+            int max = (int)(Math.Max(_widthStart, _heightStart) * percentage);
             max *= max;
             int x = 0;
             int y = 0;
@@ -101,7 +112,7 @@ namespace ImageProcesing.Code
                 if ((-halfWidth < x) && (x <= halfWidth) && (-halfHeight < y) && (y <= halfHeight))
                 {
                     process = true;
-                    if (skip > 0 && ((i + offset) % skip) != 0)
+                    if (skip > 8 && (i % (skip/8)) != 0)
                     {
                         process = false;
                     }
@@ -109,7 +120,7 @@ namespace ImageProcesing.Code
 
                 if (process)
                 {
-                    double meanSquareError = CalculateMeanSquareError(x, y);
+                    double meanSquareError = CalculateMeanSquareError(x, y, skipPixels);
                     if (bestOffsetPosition == null || meanSquareError < bestOffsetPosition.MeanSquareError)
                     {
                         bestOffsetPosition = new OffsetPosition { OffsetX = x, OffsetY = y, MeanSquareError = meanSquareError, };
@@ -123,11 +134,14 @@ namespace ImageProcesing.Code
                     temp = dx;
                     dx = -dy;
                     dy = temp;
+                    skip++;
                 }
                 x = x + dx;
                 y = y + dy;
             }
             return bestOffsetPosition;
         }
+
+
     }
 }
