@@ -125,57 +125,53 @@ namespace ImageProcesing.Code
             public double MeanSquareError { get; set; }
         }
 
-        public OffsetPosition SearchOnSpiral(float percentage = 1.0f, int skipPixels = 1)
+        public OffsetPosition SearchOnGrid(int xMin, int yMin, int xMax, int yMax, int skipChecks, int skipPixels)
         {
-            int skip = 0;
             int halfWidth = _rimgStart.Width / 2;
-            int halfHeight = _rimgStart.Width / 2;
-            int max = (int)(Math.Max(_rimgStart.Width, _rimgStart.Height) * percentage);
-            max *= max;
-            int x = 0;
-            int y = 0;
-            int dx = 0;
-            int dy = -1;
+            int halfHeight = _rimgStart.Height / 2;
             OffsetPosition bestOffsetPosition = null;
-            List<OffsetPosition> listBestOffsetPositions = new List<OffsetPosition>();
-
-            for (int i = 0; i < max; i++)
+            for(int y = yMin; y < yMax; y += skipChecks)
             {
-                Application.DoEvents();
-                bool process = false;
-                if ((-halfWidth < x) && (x <= halfWidth) && (-halfHeight < y) && (y <= halfHeight))
+                for (int x = xMin; x < xMax; x += skipChecks)
                 {
-                    process = true;
-                    if (skip > 8 && (i % (skip/8)) != 0)
-                    {
-                        process = false;
-                    }
-                }
-
-                if (process)
-                {
-                    double meanSquareError = CalculateMeanSquareError(x, y, skipPixels);
+                    Application.DoEvents();
+                    int offsetX = x - halfWidth;
+                    int offsetY = y - halfHeight;
+                    double meanSquareError = CalculateMeanSquareError(offsetX, offsetY, skipPixels);
                     if (bestOffsetPosition == null || meanSquareError < bestOffsetPosition.MeanSquareError)
                     {
-                        bestOffsetPosition = new OffsetPosition { OffsetX = x, OffsetY = y, MeanSquareError = meanSquareError, };
-                        listBestOffsetPositions.Add(bestOffsetPosition);
+                        bestOffsetPosition = new OffsetPosition { OffsetX = offsetX, OffsetY = offsetY, MeanSquareError = meanSquareError, };
                     }
                 }
-
-                if (x == y || (x < 0 && x == -y) || (x > 0 && x == (1 - y)))
-                {
-                    int temp;
-                    temp = dx;
-                    dx = -dy;
-                    dy = temp;
-                    skip++;
-                }
-                x = x + dx;
-                y = y + dy;
             }
             return bestOffsetPosition;
         }
 
-
+        public OffsetPosition SearchRecursive(int checkDensity, int skipPixels)
+        {
+            int halfWidth = _rimgStart.Width / 2;
+            int halfHeight = _rimgStart.Height / 2;
+            OffsetPosition bestOffsetPosition = null;
+            int xMin = 0;
+            int yMin = 0;
+            int xMax = _rimgStart.Width;
+            int yMax = _rimgStart.Height;
+            int skipChecks = 1;
+            do
+            {
+                skipChecks = Math.Min((xMax - xMin), (yMax - yMin)) / checkDensity;
+                if (skipChecks <= 0) { skipChecks = 1; }
+                bestOffsetPosition = SearchOnGrid(xMin, yMin, xMax, yMax, skipChecks, skipPixels);
+                if (skipChecks > 1)
+                {
+                    xMin = (bestOffsetPosition.OffsetX + halfWidth) - skipChecks;
+                    yMin = (bestOffsetPosition.OffsetY + halfHeight) - skipChecks;
+                    xMax = (bestOffsetPosition.OffsetX + halfWidth) + skipChecks;
+                    yMax = (bestOffsetPosition.OffsetY + halfHeight) + skipChecks;
+                }
+            } while (skipChecks > 1);
+            return bestOffsetPosition;
+        }
+        
     }
 }

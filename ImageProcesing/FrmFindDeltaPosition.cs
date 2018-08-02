@@ -68,12 +68,12 @@ namespace ImageProcesing
                 Image imgEnd = Image.FromFile(txtPathImageEnd.Text);
                 ctrImageViewer.ImageShow = imgStart;
                 Application.DoEvents();
-
+                
                 // Search offset
                 int skipPixels = Math.Min(imgStart.Width, imgStart.Height) / 100;
                 FindDeltaPosition findDeltaPosition = new FindDeltaPosition(imgStart, imgEnd);
                 Stopwatch sw = Stopwatch.StartNew();
-                FindDeltaPosition.OffsetPosition offsetPosition = findDeltaPosition.SearchOnSpiral(0.15f, skipPixels);
+                FindDeltaPosition.OffsetPosition offsetPosition = findDeltaPosition.SearchRecursive(30, skipPixels);
                 sw.Stop();
                 ctrOutput.AddLine(string.Format("Best: [X: {0}, Y: {1}] (Error:{2})",
                     offsetPosition.OffsetX, offsetPosition.OffsetY, offsetPosition.MeanSquareError));
