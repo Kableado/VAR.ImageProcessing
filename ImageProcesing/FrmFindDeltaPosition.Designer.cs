@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnClean = new System.Windows.Forms.Button();
+            this.btnGenMap = new System.Windows.Forms.Button();
             this.btnCalculate = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.ctrImageViewer = new ImageProcesing.Controls.CtrImageViewer();
@@ -42,16 +42,16 @@
             ((System.ComponentModel.ISupportInitialize)(this.ctrImageViewer)).BeginInit();
             this.SuspendLayout();
             // 
-            // btnClean
+            // btnGenMap
             // 
-            this.btnClean.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnClean.Location = new System.Drawing.Point(775, 12);
-            this.btnClean.Name = "btnClean";
-            this.btnClean.Size = new System.Drawing.Size(114, 26);
-            this.btnClean.TabIndex = 3;
-            this.btnClean.Text = "Clean";
-            this.btnClean.UseVisualStyleBackColor = true;
-            this.btnClean.Click += new System.EventHandler(this.btnClean_Click);
+            this.btnGenMap.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnGenMap.Location = new System.Drawing.Point(775, 12);
+            this.btnGenMap.Name = "btnGenMap";
+            this.btnGenMap.Size = new System.Drawing.Size(114, 26);
+            this.btnGenMap.TabIndex = 3;
+            this.btnGenMap.Text = "GenMap";
+            this.btnGenMap.UseVisualStyleBackColor = true;
+            this.btnGenMap.Click += new System.EventHandler(this.btnGenMap_Click);
             // 
             // btnCalculate
             // 
@@ -129,7 +129,7 @@
             this.ClientSize = new System.Drawing.Size(901, 1008);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.btnCalculate);
-            this.Controls.Add(this.btnClean);
+            this.Controls.Add(this.btnGenMap);
             this.Controls.Add(this.txtPathImageEnd);
             this.Controls.Add(this.txtPathImageStart);
             this.Name = "FrmFindDeltaPosition";
@@ -148,7 +148,7 @@
 
         private Controls.CtrFileTextBox txtPathImageStart;
         private Controls.CtrFileTextBox txtPathImageEnd;
-        private System.Windows.Forms.Button btnClean;
+        private System.Windows.Forms.Button btnGenMap;
         private System.Windows.Forms.Button btnCalculate;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private Controls.CtrImageViewer ctrImageViewer;

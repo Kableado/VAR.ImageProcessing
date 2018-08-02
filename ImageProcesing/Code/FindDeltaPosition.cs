@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Windows.Forms;
 
 namespace ImageProcesing.Code
@@ -45,6 +46,76 @@ namespace ImageProcesing.Code
             }
             double meanSquareRoot = (sum / (double)cnt);
             return meanSquareRoot;
+        }
+
+        public Bitmap GenerateErrorMap(int skipChecks, int skipPixels)
+        {
+            int halfWidth = _rimgStart.Width / 2;
+            int halfHeight = _rimgStart.Height / 2;
+            int mapWidth = (int)Math.Ceiling(_rimgStart.Width / (double)skipChecks) + 1;
+            int mapHeight = (int)Math.Ceiling(_rimgStart.Height / (double)skipChecks) + 1;
+            double[,] map = new double[mapWidth, mapHeight];
+
+            // Calculate map
+            for (int y = 0; y < mapHeight; y++)
+            {
+                for (int x = 0; x < mapWidth; x++)
+                {
+                    int offsetX = (x * skipChecks) - halfWidth;
+                    int offsetY = (y * skipChecks) - halfHeight;
+                    double meanSquareError = CalculateMeanSquareError(offsetX, offsetY, skipPixels);
+                    map[x, y] = meanSquareError;
+                }
+            }
+
+            // Normalize Map
+            double maxMeanSquareError = -1;
+            for (int y = 0; y < mapHeight; y++)
+            {
+                for (int x = 0; x < mapWidth; x++)
+                {
+                    double meanSquareError = map[x, y];
+                    if (maxMeanSquareError < meanSquareError)
+                    {
+                        maxMeanSquareError = meanSquareError;
+                    }
+                }
+            }
+            for (int y = 0; y < mapHeight; y++)
+            {
+                for (int x = 0; x < mapWidth; x++)
+                {
+                    double meanSquareError = map[x, y];
+                    meanSquareError = 1.0f - (meanSquareError / maxMeanSquareError);
+                    map[x, y] = meanSquareError;
+                }
+            }
+            
+            // Draw map
+            int medX = halfWidth / skipChecks;
+            int medY = halfHeight / skipChecks;
+            Bitmap bmpError = new Bitmap(mapWidth, mapHeight, PixelFormat.Format24bppRgb);
+            for (int y = 0; y < mapHeight; y++)
+            {
+                for (int x = 0; x < mapWidth; x++)
+                {
+                    double meanSquareError = map[x, y];
+
+                    byte bMeanSquareError = (byte)(255 * meanSquareError);
+                    if (x == medX && y == medY)
+                    {
+                        Color color = Color.FromArgb(255, bMeanSquareError, bMeanSquareError);
+                        bmpError.SetPixel(x, y, color);
+                    }
+                    else
+                    {
+                        Color color = Color.FromArgb(bMeanSquareError, bMeanSquareError, bMeanSquareError);
+                        bmpError.SetPixel(x, y, color);
+                    }
+                }
+            }
+            
+            return bmpError;
         }
 
         public class OffsetPosition
