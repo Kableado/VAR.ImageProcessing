@@ -158,7 +158,12 @@ namespace VAR.ImageProcesing.Code
             {
                 skipChecks = Math.Min((xMax - xMin), (yMax - yMin)) / checkDensity;
                 if (skipChecks <= 0) { skipChecks = 1; }
-                bestOffsetPosition = SearchOnGrid(xMin, yMin, xMax, yMax, skipChecks, skipPixels);
+                OffsetPosition newOffsetPosition = SearchOnGrid(xMin, yMin, xMax, yMax, skipChecks, skipPixels);
+                if (newOffsetPosition == null) { return null; }
+                if (bestOffsetPosition == null || newOffsetPosition.MeanSquareError < bestOffsetPosition.MeanSquareError)
+                {
+                    bestOffsetPosition = newOffsetPosition;
+                }
                 if (skipChecks > 1)
                 {
                     xMin = (bestOffsetPosition.OffsetX + halfWidth) - skipChecks;
