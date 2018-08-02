@@ -2,7 +2,7 @@
 using System.IO;
 using System.Windows.Forms;
 
-namespace ImageProcesing.Controls
+namespace VAR.ImageProcesing.Toolbox.Controls
 {
     public class CtrFileTextBox : TextBox
     {

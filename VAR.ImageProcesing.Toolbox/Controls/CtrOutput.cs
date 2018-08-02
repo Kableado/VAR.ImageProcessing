@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 
-namespace ImageProcesing.Controls
+namespace VAR.ImageProcesing.Toolbox.Controls
 {
     public class CtrOutput : Control
     {

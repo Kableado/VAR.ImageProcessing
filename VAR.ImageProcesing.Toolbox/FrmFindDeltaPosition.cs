@@ -1,4 +1,4 @@
-﻿using ImageProcesing.Code;
+﻿using VAR.ImageProcesing.Code;
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -6,7 +6,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Windows.Forms;
 
-namespace ImageProcesing
+namespace VAR.ImageProcesing.Toolbox
 {
     public partial class FrmFindDeltaPosition : Form
     {
@@ -70,7 +70,7 @@ namespace ImageProcesing
                 Application.DoEvents();
                 
                 // Search offset
-                int skipPixels = Math.Min(imgStart.Width, imgStart.Height) / 100;
+                int skipPixels = Math.Min(imgStart.Width, imgStart.Height) / 150;
                 FindDeltaPosition findDeltaPosition = new FindDeltaPosition(imgStart, imgEnd);
                 Stopwatch sw = Stopwatch.StartNew();
                 FindDeltaPosition.OffsetPosition offsetPosition = findDeltaPosition.SearchRecursive(30, skipPixels);

@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Windows.Forms;
 
-namespace ImageProcesing.Code
+namespace VAR.ImageProcesing.Code
 {
     public class FindDeltaPosition
     {
@@ -134,7 +132,6 @@ namespace ImageProcesing.Code
             {
                 for (int x = xMin; x < xMax; x += skipChecks)
                 {
-                    Application.DoEvents();
                     int offsetX = x - halfWidth;
                     int offsetY = y - halfHeight;
                     double meanSquareError = CalculateMeanSquareError(offsetX, offsetY, skipPixels);

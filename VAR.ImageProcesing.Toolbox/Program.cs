@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace ImageProcesing
+namespace VAR.ImageProcesing.Toolbox
 {
     static class Program
     {
