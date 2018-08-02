@@ -1,10 +1,10 @@
-﻿using VAR.ImageProcesing.Code;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Windows.Forms;
+using VAR.ImageProcesing.Code;
+using VAR.ImageProcesing.Toolbox.Code;
 
 namespace VAR.ImageProcesing.Toolbox
 {
@@ -68,7 +68,7 @@ namespace VAR.ImageProcesing.Toolbox
                 Image imgEnd = Image.FromFile(txtPathImageEnd.Text);
                 ctrImageViewer.ImageShow = imgStart;
                 Application.DoEvents();
-                
+
                 // Search offset
                 int skipPixels = Math.Min(imgStart.Width, imgStart.Height) / 150;
                 FindDeltaPosition findDeltaPosition = new FindDeltaPosition(imgStart, imgEnd);
@@ -79,16 +79,10 @@ namespace VAR.ImageProcesing.Toolbox
                     offsetPosition.OffsetX, offsetPosition.OffsetY, offsetPosition.MeanSquareError));
                 ctrOutput.AddLine(string.Format("Time {0} MS", sw.ElapsedMilliseconds));
                 Application.DoEvents();
-                
+
                 // Apply Offset
-                Bitmap bmpResult = new Bitmap(imgStart.Width, imgStart.Height, PixelFormat.Format24bppRgb);
-                Graphics g = Graphics.FromImage(bmpResult);
-                g.DrawImage(imgEnd, 0, 0, imgEnd.Width, imgEnd.Height);
-                g.DrawImage(imgEnd, offsetPosition.OffsetX, offsetPosition.OffsetY, imgEnd.Width, imgEnd.Height);
-                string strFileEndProcessed = string.Format("{0}/{1}.offset{2}",
-                    Path.GetDirectoryName(txtPathImageEnd.Text),
-                    Path.GetFileNameWithoutExtension(txtPathImageEnd.Text),
-                    Path.GetExtension(txtPathImageEnd.Text));
+                Bitmap bmpResult = ImageHelper.OffsetImage(offsetPosition.OffsetX, offsetPosition.OffsetY, imgEnd);
+                string strFileEndProcessed = PathHelper.AddSuffixToFilePath(txtPathImageEnd.Text, ".offset");
                 bmpResult.Save(strFileEndProcessed);
                 ctrOutput.AddLine(string.Format("Offset applied to \"{0}\"", strFileEndProcessed));
                 Application.DoEvents();
@@ -101,6 +95,7 @@ namespace VAR.ImageProcesing.Toolbox
                 ctrOutput.AddLine(ex.StackTrace);
             }
         }
+
     }
 
 }
