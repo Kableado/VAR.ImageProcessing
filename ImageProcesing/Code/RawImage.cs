@@ -57,5 +57,14 @@ namespace ImageProcesing.Code
         {
             return (x + (y * _width)) * BytesPerPixel;
         }
+
+        public int GetOffsetLooping(int x, int y)
+        {
+            x = (x % _width);
+            if (x < 0) { x = x + _width; }
+            y = (y % _height);
+            if (y < 0) { y = y + _height; }
+            return (x + (y * _width)) * BytesPerPixel;
+        }
     }
 }

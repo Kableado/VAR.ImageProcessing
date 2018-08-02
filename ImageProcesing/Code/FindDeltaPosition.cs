@@ -31,10 +31,9 @@ namespace ImageProcesing.Code
                 {
                     int x2 = x - offsetX;
                     int y2 = y - offsetY;
-                    if (_rimgEnd.IsInsideBounds(x2, y2) == false) { continue; }
 
                     long offset1 = _rimgStart.GetOffset(x, y);
-                    long offset2 = _rimgEnd.GetOffset(x2, y2);
+                    long offset2 = _rimgEnd.GetOffsetLooping(x2, y2);
 
                     for (int c = 0; c < RawImage.BytesPerPixel; c++)
                     {
