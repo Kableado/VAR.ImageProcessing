@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 
-namespace VAR.ImageProcesing
+namespace VAR.ImageProcessing
 {
     public class FindDeltaPosition
     {

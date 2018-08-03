@@ -1,4 +1,4 @@
-﻿namespace VAR.ImageProcesing.Toolbox
+﻿namespace VAR.ImageProcessing.Toolbox
 {
     partial class FrmFindDeltaPosition
     {
@@ -31,10 +31,10 @@
             this.btnGenMap = new System.Windows.Forms.Button();
             this.btnCalculate = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.ctrImageViewer = new VAR.ImageProcesing.Toolbox.Controls.CtrImageViewer();
-            this.ctrOutput = new VAR.ImageProcesing.Toolbox.Controls.CtrOutput();
-            this.txtPathImageEnd = new VAR.ImageProcesing.Toolbox.Controls.CtrFileTextBox();
-            this.txtPathImageStart = new VAR.ImageProcesing.Toolbox.Controls.CtrFileTextBox();
+            this.ctrImageViewer = new VAR.ImageProcessing.Toolbox.Controls.CtrImageViewer();
+            this.ctrOutput = new VAR.ImageProcessing.Toolbox.Controls.CtrOutput();
+            this.txtPathImageEnd = new VAR.ImageProcessing.Toolbox.Controls.CtrFileTextBox();
+            this.txtPathImageStart = new VAR.ImageProcessing.Toolbox.Controls.CtrFileTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();

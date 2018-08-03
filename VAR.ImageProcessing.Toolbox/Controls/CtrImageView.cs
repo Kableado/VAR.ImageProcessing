@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace VAR.ImageProcesing.Toolbox.Controls
+namespace VAR.ImageProcessing.Toolbox.Controls
 {
     public class CtrImageViewer : PictureBox
     {

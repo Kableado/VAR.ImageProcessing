@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace VAR.ImageProcesing.Toolbox.Code
+namespace VAR.ImageProcessing.Toolbox.Code
 {
     public class PathHelper
     {

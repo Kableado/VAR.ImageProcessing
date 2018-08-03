@@ -3,9 +3,9 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using VAR.ImageProcesing.Toolbox.Code;
+using VAR.ImageProcessing.Toolbox.Code;
 
-namespace VAR.ImageProcesing.Toolbox
+namespace VAR.ImageProcessing.Toolbox
 {
     public partial class FrmFindDeltaPosition : Form
     {

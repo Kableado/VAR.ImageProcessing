@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VAR.ImageProcesing.Toolbox", "VAR.ImageProcesing.Toolbox\VAR.ImageProcesing.Toolbox.csproj", "{445B4076-321F-42E2-8E2C-B3481A84E415}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VAR.ImageProcessing.Toolbox", "VAR.ImageProcessing.Toolbox\VAR.ImageProcessing.Toolbox.csproj", "{445B4076-321F-42E2-8E2C-B3481A84E415}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VAR.ImageProcesing", "VAR.ImageProcesing\VAR.ImageProcesing.csproj", "{9A3BD6B0-2531-4F9F-B8A3-CA790433C04F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VAR.ImageProcessing", "VAR.ImageProcessing\VAR.ImageProcessing.csproj", "{9A3BD6B0-2531-4F9F-B8A3-CA790433C04F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
