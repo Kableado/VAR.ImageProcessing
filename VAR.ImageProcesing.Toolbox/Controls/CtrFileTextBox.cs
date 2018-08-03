@@ -6,6 +6,8 @@ namespace VAR.ImageProcesing.Toolbox.Controls
 {
     public class CtrFileTextBox : TextBox
     {
+        public bool DirectoryChooser { get; set; } = false;
+
         public CtrFileTextBox()
         {
             DoubleClick += CtrFileTextBox_DoubleClick;
@@ -22,16 +24,38 @@ namespace VAR.ImageProcesing.Toolbox.Controls
 
         private void CtrFileTextBox_DoubleClick(object sender, EventArgs e)
         {
+            if (DirectoryChooser)
+            {
+                ShowDirectorySelector();
+            }
+            else
+            {
+                ShowFileSelector();
+            }
+        }
+
+        private void ShowFileSelector()
+        {
             FileDialog fileDialog = new OpenFileDialog();
-            if(string.IsNullOrEmpty(Text) == false)
+            if (string.IsNullOrEmpty(Text) == false)
             {
                 string path = Path.GetDirectoryName(Text);
                 fileDialog.InitialDirectory = path;
             }
             DialogResult result = fileDialog.ShowDialog();
-            if(result == DialogResult.OK)
+            if (result == DialogResult.OK)
             {
                 Text = fileDialog.FileName;
+            }
+        }
+
+        private void ShowDirectorySelector()
+        {
+            FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+            DialogResult result = folderBrowserDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                Text = folderBrowserDialog.SelectedPath;
             }
         }
     }
