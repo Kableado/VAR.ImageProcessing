@@ -159,7 +159,18 @@ namespace VAR.ImageProcessing.Toolbox.Controls
         {
             lock (_pendingOutput)
             {
-                _pendingOutput.Add(new OutputItem { Text = line, Data = data, });
+                if (line.Contains("\n"))
+                {
+                    string[] lines = line.Split('\n');
+                    foreach (string lineAux in lines)
+                    {
+                        _pendingOutput.Add(new OutputItem { Text = lineAux, Data = data, });
+                    }
+                }
+                else
+                {
+                    _pendingOutput.Add(new OutputItem { Text = line, Data = data, });
+                }
                 _updated = true;
             }
         }
