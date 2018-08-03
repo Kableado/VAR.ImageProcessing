@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using VAR.ImageProcesing.Code;
 using VAR.ImageProcesing.Toolbox.Code;
 
 namespace VAR.ImageProcesing.Toolbox

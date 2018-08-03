@@ -2,7 +2,7 @@
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
-namespace VAR.ImageProcesing.Code
+namespace VAR.ImageProcesing
 {
     public class RawImage
     {
