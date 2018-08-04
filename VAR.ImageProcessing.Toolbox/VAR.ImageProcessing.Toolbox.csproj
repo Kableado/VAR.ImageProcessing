@@ -63,6 +63,12 @@
     <Compile Include="Controls\CtrOutput.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="FrmBatchProcessImages.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmBatchProcessImages.Designer.cs">
+      <DependentUpon>FrmBatchProcessImages.cs</DependentUpon>
+    </Compile>
     <Compile Include="FrmFindDeltaPosition.cs">
       <SubType>Form</SubType>
     </Compile>

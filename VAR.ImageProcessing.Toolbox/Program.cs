@@ -13,7 +13,7 @@ namespace VAR.ImageProcessing.Toolbox
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FrmFindDeltaPosition());
+            Application.Run(new FrmBatchProcessImages());
         }
     }
 }
