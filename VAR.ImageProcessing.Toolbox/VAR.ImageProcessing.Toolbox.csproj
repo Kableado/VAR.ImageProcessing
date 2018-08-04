@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Code\FileHelper.cs" />
     <Compile Include="Code\ImageHelper.cs" />
     <Compile Include="Code\PathHelper.cs" />
     <Compile Include="Controls\CtrFileTextBox.cs">
